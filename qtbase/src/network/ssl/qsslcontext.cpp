@@ -178,9 +178,11 @@ init_context:
     }
 
     // now add the expired certs
-    foreach (const QSslCertificate &caCertificate, expiredCerts) {
+	//add zenghao
+	qDebug()<<"do not add expiredCerts";
+    /*foreach (const QSslCertificate &caCertificate, expiredCerts) {
         q_X509_STORE_add_cert(sslContext->ctx->cert_store, reinterpret_cast<X509 *>(caCertificate.handle()));
-    }
+    }*/
 
     if (QSslSocketPrivate::s_loadRootCertsOnDemand && allowRootCertOnDemandLoading) {
         // tell OpenSSL the directories where to look up the root certs on demand

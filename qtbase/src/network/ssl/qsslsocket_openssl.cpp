@@ -662,10 +662,12 @@ QList<QSslCertificate> QSslSocketPrivate::systemCaCertificates()
         }
     }
 #elif defined(Q_OS_WIN)
+	systemCerts.append(QSslCertificate::fromPath(QLatin1String(":/trolltech/network/ssl/qt-ca-bundle.crt"), QSsl::Pem)); // FreeBSD's ca_root_nss
     if (ptrCertOpenSystemStoreW && ptrCertFindCertificateInStore && ptrCertCloseStore) {
         HCERTSTORE hSystemStore;
 #if defined(Q_OS_WINCE)
         hSystemStore = ptrCertOpenSystemStoreW(CERT_STORE_PROV_SYSTEM_W,
+                                               0,
                                                0,
                                                0,
                                                CERT_STORE_NO_CRYPT_RELEASE_FLAG|CERT_SYSTEM_STORE_CURRENT_USER,
@@ -735,7 +737,7 @@ QList<QSslCertificate> QSslSocketPrivate::systemCaCertificates()
     qDebug() << "systemCaCertificates retrieval time " << timer.elapsed() << "ms";
     qDebug() << "imported " << systemCerts.count() << " certificates";
 #endif
-
+	
     return systemCerts;
 }
 
@@ -1581,8 +1583,9 @@ QList<QSslError> QSslSocketBackendPrivate::verify(QList<QSslCertificate> certifi
     }
 
     QList<QSslCertificate> expiredCerts;
-
+	qDebug()<<"QSslSocketBackendPrivate out";
     foreach (const QSslCertificate &caCertificate, QSslSocket::defaultCaCertificates()) {
+	qDebug()<<"QSslSocketBackendPrivate into";
         // add expired certs later, so that the
         // valid ones are used before the expired ones
         if (caCertificate.expiryDate() < QDateTime::currentDateTime()) {
@@ -1592,14 +1595,18 @@ QList<QSslError> QSslSocketBackendPrivate::verify(QList<QSslCertificate> certifi
         }
     }
 
-    // now add the expired certs
-    foreach (const QSslCertificate &caCertificate, expiredCerts) {
+    // do not add the expired certs
+	//add by zenghao 2014-06-05 , uncomment these lines ,so that expired Certs will not take effect.
+    /*
+	foreach (const QSslCertificate &caCertificate, expiredCerts) {
         q_X509_STORE_add_cert(certStore, reinterpret_cast<X509 *>(caCertificate.handle()));
     }
+	*/
 
     QMutexLocker sslErrorListMutexLocker(&_q_sslErrorList()->mutex);
 
     // Register a custom callback to get all verification errors.
+	
     X509_STORE_set_verify_cb_func(certStore, q_X509Callback);
 
     // Build the chain of intermediate certificates

@@ -27,6 +27,8 @@ contains(QT_CONFIG, openssl) | contains(QT_CONFIG, openssl-linked) {
                ssl/qsslsocket_openssl_symbols.cpp \
                ssl/qsslcertificateextension.cpp \
                ssl/qsslcontext.cpp
+			   
+	RESOURCES += network.qrc
 
 android:!android-no-sdk: SOURCES += ssl/qsslsocket_openssl_android.cpp
 
