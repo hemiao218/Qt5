@@ -3911,7 +3911,7 @@ bool HTMLMediaElement::potentiallyPlaying() const
     // when it ran out of buffered data. A movie is this state is "potentially playing", modulo the
     // checks in couldPlayIfEnoughData().
     bool pausedToBuffer = m_readyStateMaximum >= HAVE_FUTURE_DATA && m_readyState < HAVE_FUTURE_DATA;
-    return (pausedToBuffer || m_readyState >= HAVE_FUTURE_DATA) && couldPlayIfEnoughData() && !isBlockedOnMediaController();
+    return (pausedToBuffer || m_readyState >= 1) && couldPlayIfEnoughData() && !isBlockedOnMediaController();
 }
 
 bool HTMLMediaElement::couldPlayIfEnoughData() const
