@@ -302,13 +302,13 @@ QMediaTimeRange QT7PlayerSession::availablePlaybackRanges() const
         return QMediaTimeRange(0, qint64(float(loadedTime.timeValue) / loadedTime.timeScale * 1000.0));
     }
 #else
-    TimeValue loadedTime;
-    TimeScale scale;
-    Movie m = [movie quickTimeMovie];
-    if (GetMaxLoadedTimeInMovie(m, &loadedTime) == noErr) {
-        scale = GetMovieTimeScale(m);
-        return QMediaTimeRange(0, qint64(float(loadedTime) / scale * 1000.0f));
-    }
+   // TimeValue loadedTime;
+   // TimeScale scale;
+   // Movie m = [movie quickTimeMovie];
+    //if (GetMaxLoadedTimeInMovie(m, &loadedTime) == noErr) {
+    //    scale = GetMovieTimeScale(m);
+    //   return QMediaTimeRange(0, qint64(float(loadedTime) / scale * 1000.0f));
+    //}
 #endif
     return QMediaTimeRange(0, duration());
 }
@@ -368,6 +368,7 @@ void QT7PlayerSession::play()
     [(QTMovie*)m_QTMovie setRate:preferredRate * m_rate];
 
     processLoadStateChange();
+    [m_QTMovie play];
     Q_EMIT stateChanged(m_state);
 }
 
@@ -561,7 +562,7 @@ void QT7PlayerSession::openMovie(bool tryAsync)
     if (tryAsync && QSysInfo::MacintoshVersion >= QSysInfo::MV_10_6) {
         [attr setObject:[NSNumber numberWithBool:YES] forKey:@"QTMovieOpenAsyncRequiredAttribute"];
 // XXX: This is disabled for now. causes some problems with video playback for some formats
-//        [attr setObject:[NSNumber numberWithBool:YES] forKey:@"QTMovieOpenForPlaybackAttribute"];
+        [attr setObject:[NSNumber numberWithBool:YES] forKey:@"QTMovieOpenForPlaybackAttribute"];
         m_tryingAsync = true;
     }
     else
@@ -571,6 +572,7 @@ void QT7PlayerSession::openMovie(bool tryAsync)
     if (err != nil) {
         // First attempt to test for inability to perform async
 //        if ([err code] == QTErrorMovieOpeningCannotBeAsynchronous) { XXX: error code unknown!
+        qDebug()<<"openfail:"<<err;
         if (m_tryingAsync) {
             m_tryingAsync = false;
             err = nil;

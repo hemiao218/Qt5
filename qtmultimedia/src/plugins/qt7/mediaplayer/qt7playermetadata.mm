@@ -222,12 +222,12 @@ void QT7PlayerMetaDataControl::updateTags()
 
 #ifdef QUICKTIME_C_API_AVAILABLE
         QTMetaDataRef metaDataRef;
-        OSStatus err = QTCopyMovieMetaData([movie quickTimeMovie], &metaDataRef);
+        /*OSStatus err = QTCopyMovieMetaData([movie quickTimeMovie], &metaDataRef);
         if (err == noErr) {
             readFormattedData(metaDataRef, kQTMetaDataStorageFormatUserData, metaMap);
             readFormattedData(metaDataRef, kQTMetaDataStorageFormatQuickTime, metaMap);
             readFormattedData(metaDataRef, kQTMetaDataStorageFormatiTunes, metaMap);
-        }
+        }*/
 #else
         AutoReleasePool pool;
         NSString *name = [movie attributeForKey:@"QTMovieDisplayNameAttribute"];

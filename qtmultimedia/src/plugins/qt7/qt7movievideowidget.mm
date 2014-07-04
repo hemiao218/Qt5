@@ -285,8 +285,9 @@ void QT7MovieVideoWidget::setupVideoOutput()
     m_videoWidget->setNativeSize(m_nativeSize);
 
 #ifdef QUICKTIME_C_API_AVAILABLE
+    [m_movie setVisualContext:m_visualContext];
     // targets a Movie to render into a visual context
-    SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], m_visualContext);
+    //SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], m_visualContext);
 #endif
 
     m_displayLink->start();
@@ -299,7 +300,8 @@ void QT7MovieVideoWidget::setMovie(void *movie)
 
     if (m_movie) {
 #ifdef QUICKTIME_C_API_AVAILABLE
-        SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], nil);
+        [m_movie setVisualContext:nil];
+        //SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], nil);
 #endif
         [(QTMovie*)m_movie release];
     }
@@ -396,13 +398,17 @@ void QT7MovieVideoWidget::updateColors()
 
         Float32 value;
         value = m_brightness/100.0;
-        SetMovieVisualBrightness([movie quickTimeMovie], value, 0);
+	[m_movie setVisualBrightness:value,0];
+        //SetMovieVisualBrightness([movie quickTimeMovie], value, 0);
         value = pow(2, m_contrast/50.0);
-        SetMovieVisualContrast([movie quickTimeMovie], value, 0);
+	[m_movie setVisualContrast:value,0];
+        //SetMovieVisualContrast([movie quickTimeMovie], value, 0);
         value = m_hue/100.0;
-        SetMovieVisualHue([movie quickTimeMovie], value, 0);
+	[m_movie setVisualHue:value,0];
+        //SetMovieVisualHue([movie quickTimeMovie], value, 0);
         value = 1.0+m_saturation/100.0;
-        SetMovieVisualSaturation([movie quickTimeMovie], value, 0);
+	[m_movie setVisualSaturation:value,0];
+        //SetMovieVisualSaturation([movie quickTimeMovie], value, 0);
     }
 #endif
 }

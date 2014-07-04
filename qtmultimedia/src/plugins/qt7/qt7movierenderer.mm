@@ -9,7 +9,7 @@
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
+** Software or, alternatively, in accordance with the terms contained in373
 ** a written agreement between you and Digia.  For licensing terms and
 ** conditions see http://qt.digia.com/licensing.  For further information
 ** use the contact form at http://qt.digia.com/contact-us.
@@ -370,9 +370,9 @@ void QT7MovieRenderer::setupVideoOutput()
                 }
             }
         }
-
+        [m_movie setVisualContext:m_visualContext];
         // targets a Movie to render into a visual context
-        SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], m_visualContext);
+        //SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], m_visualContext);
 
         m_displayLink->start();
     }
@@ -392,7 +392,8 @@ void QT7MovieRenderer::setMovie(void *movie)
     if (m_movie != movie) {
         if (m_movie) {
             //ensure the old movie doesn't hold the visual context, otherwise it can't be reused
-            SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], nil);
+            [m_movie setVisualContext:nil];
+            //SetMovieVisualContext([(QTMovie*)m_movie quickTimeMovie], nil);
             [(QTMovie*)m_movie release];
         }
 
